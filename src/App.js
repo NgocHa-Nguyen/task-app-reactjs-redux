@@ -11,7 +11,7 @@ class App extends Component {
       isDisplayForm : false
     }
   }
-  componentWillMount(){
+  componentDidMount(){
     if(localStorage && localStorage.getItem("tasks")){
       var tasks = JSON.parse(localStorage.getItem('tasks'));
       this.setState({
@@ -19,10 +19,9 @@ class App extends Component {
       })
     }
   }
-  onGenerateData = () => {
+   onGenerateData = () => {
     var tasks = [
-      {
-        id :1 ,
+      { 
         title : 'GotoSchool',
         status: true,
       },
@@ -57,9 +56,14 @@ class App extends Component {
       isDisplayForm : false
     })
   }
+  onSubmit = (data) => {
+    console.log(data);    
+  }
   render() {
     const {tasks, isDisplayForm} = this.state;
-    const elemteTaskForm = isDisplayForm ? <TaskForm onCloseForm={this.onCloseForm}/> : ''
+    const elemteTaskForm = isDisplayForm ? <TaskForm 
+    onSubmit={this.onSubmit}
+    onCloseForm={this.onCloseForm}/> : ''
     return (
       <div className="container">
         <div className="text-center">
@@ -67,10 +71,10 @@ class App extends Component {
           <hr/>
         </div>
         <div className="row">
-          <div className={isDisplayForm == true ? "col-xs-4 col-sm-4 col-md-4 col-lg-4" : ''}>
+          <div className={isDisplayForm === true ? "col-xs-4 col-sm-4 col-md-4 col-lg-4" : ''}>
             {elemteTaskForm}
           </div>
-          <div className={isDisplayForm == true ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
+          <div className={isDisplayForm === true ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
             <button type="button" className="btn btn-primary" onClick={this.onToggerForm}>
               <span className="fa fa-plus mr-5"></span>Thêm Công Việc
             </button>

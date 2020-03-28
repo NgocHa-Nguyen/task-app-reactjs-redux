@@ -1,11 +1,30 @@
 import React, { Component } from "react";
 class TaskForm extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
+    this.state = {
+      title: "",
+    };
   }
   onCloseForm = () => {
     this.props.onCloseForm();
   };
+  onChange = event => {
+    let target = event.target;
+    let name = target.name;
+    let value = target.value;
+    if(name === 'status'){
+      value = target.value === 'true' ? true : false
+    }
+    this.setState({
+      [name]: value
+    });
+  };
+  onSubmit = event => {
+    event.preventDefault();
+    this.props.onSubmit(this.state);
+  };
+//truyen qua lai App, theem vao array
   render() {
     return (
       <div className="panel panel-warning">
@@ -18,15 +37,25 @@ class TaskForm extends Component {
           </h3>
         </div>
         <div className="panel-body">
-          <form>
+          <form onSubmit={this.onSubmit}>
             <div className="form-group">
               <label>Title :</label>
-              <input type="text" className="form-control" />
+              <input
+                type="text"
+                name="title"
+                onChange={this.onChange}
+                className="form-control"
+              />
             </div>
             <label>Status :</label>
-            <select className="form-control" required="required">
-              <option value="1">Kích Hoạt</option>
-              <option value="0">Ẩn</option>
+            <select
+              name="status"
+              className="form-control"
+              onChange={this.onChange}
+              required="required"
+            >
+              <option value={true}>Kích Hoạt</option>
+              <option value={false}>Ẩn</option>
             </select>
             <br />
             <div className="text-center">
