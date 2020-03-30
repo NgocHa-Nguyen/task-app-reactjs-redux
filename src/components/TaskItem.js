@@ -1,6 +1,16 @@
 import React, { Component } from "react";
 
 class TaskItem extends Component {
+  onUpdateStatus = () => {
+    this.props.onUpdateStatus(this.props.task.id)
+  }
+  onDelete = () => {
+    this.props.onDelete(this.props.task.id)
+  }
+  onUpdate = () => {
+    this.props.onEdit(this.props.task.id)
+
+  }
   render() {
     const { task, index } = this.props;
     return (
@@ -14,17 +24,18 @@ class TaskItem extends Component {
                 ? "label label-success"
                 : "label label-danger"
             }
+            onClick={this.onUpdateStatus}
           >
             {task.status === true ? "Kich Hoat" : " An"}
           </span>
         </td>
         <td className="text-center">
           <button type="button" className="btn btn-warning">
-            <span className="fa fa-pencil mr-5"></span>Sửa
+            <span className="fa fa-pencil mr-5" onClick={this.onUpdate}>Edit</span>
           </button>
           &nbsp;
           <button type="button" className="btn btn-danger">
-            <span className="fa fa-trash mr-5"></span>Xóa
+            <span className="fa fa-trash mr-5" onClick={this.onDelete}>Delete</span>
           </button>
         </td>
       </tr>
