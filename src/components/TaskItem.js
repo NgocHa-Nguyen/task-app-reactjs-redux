@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-
+import { connect } from "react-redux";
+import { getData } from "../actions/taskAction";
 class TaskItem extends Component {
   onUpdateStatus = () => {
     this.props.onUpdateStatus(this.props.task.id)
@@ -12,16 +13,17 @@ class TaskItem extends Component {
 
   }
   render() {
+
     const { task, index } = this.props;
     return (
       <tr>
         <td>{index + 1}</td>
-        <td>{task.title}</td>
+        <td>{task.userId}</td>
         <td className="text-center">
           <span
             className={
               task.status === true
-                ? "label label-success"
+                ? "label label-success" 
                 : "label label-danger"
             }
             onClick={this.onUpdateStatus}
@@ -42,5 +44,16 @@ class TaskItem extends Component {
     );
   }
 }
-
-export default TaskItem;
+const mapStateToProps = state => {
+  return {
+    tasks: state.tasks
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    actionGetData: () => {
+      dispatch(getData());
+    }
+  };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(TaskItem);

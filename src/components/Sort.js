@@ -5,11 +5,9 @@ class Sort extends Component {
     super(props);
     this.state = {};
   }
-  onClick = () => {
-    
-  };
+
   render() {
-    return (
+    return ( 
       <div className="dropdown">
         <button
           className="btn btn-primary dropdown-toggle"

@@ -3,11 +3,12 @@ import TaskForm from "./components/TaskForm";
 import Control from "./components/Control";
 import TaskList from "./components/TaskList";
 import "./App.css";
+import {connect} from "react-redux";
+import {getData} from "./actions/taskAction";
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
       taskEditing: null,
       isDisplayForm: false,
       filter: {
@@ -23,12 +24,13 @@ class App extends Component {
     };
   }
   componentDidMount() {
-    if (localStorage && localStorage.getItem("tasks")) {
-      var tasks = JSON.parse(localStorage.getItem("tasks"));
-      this.setState({
-        tasks: tasks
-      });
-    }
+    // if (localStorage && localStorage.getItem("tasks")) {
+    //   var tasks = JSON.parse(localStorage.getItem("tasks"));
+    //   this.setState({
+    //     tasks: tasks
+    //   });
+    // }
+    this.props.actionGetData();
   }
   onToggerForm = () => {
     this.setState({
@@ -97,31 +99,33 @@ class App extends Component {
     this.setState({
       keySearch : keySearch
     })
-    console.log(this.state.keySearch)
   }
   render() {
-    let { tasks, isDisplayForm, taskEditing, filter, keySearch } = this.state;
-    if (filter) {
-      if (filter.name) {
-        tasks = tasks.filter(task => {
-          return task.title.toLowerCase().indexOf(filter.name) !== -1;
-        });
+    const {tasks} =  this.props
+    let { isDisplayForm, taskEditing, filter, keySearch } = this.state;
+    if(tasks.length > 0){
+      if (filter) {
+        if (filter.name) {
+          tasks = tasks.filter(task => {
+            return task.title.toLowerCase().indexOf(filter.name) !== -1;
+          });
+        }
+        if(filter.status) {
+          tasks = tasks.filter((task) => {
+            if(filter.status === -1){
+              return task;
+            }else 
+            {
+              return task.status === (filter.status === 1 ? true : false)
+            }
+          })
+        }
       }
-      if(filter.status) {
+      if(keySearch){
         tasks = tasks.filter((task) => {
-          if(filter.status === -1){
-            return task;
-          }else 
-          {
-            return task.status === (filter.status === 1 ? true : false)
-          }
+          return task.title.toLowerCase().indexOf(keySearch) !== -1
         })
       }
-    }
-    if(keySearch){
-      tasks = tasks.filter((task) => {
-        return task.title.toLowerCase().indexOf(keySearch) !== -1
-      })
     }
   
     const elemteTaskForm = isDisplayForm ? (
@@ -134,6 +138,7 @@ class App extends Component {
       ""
     );
     return (
+      
       <div className="container">
         <div className="text-center">
           <h1>TODO - APP</h1>
@@ -167,7 +172,6 @@ class App extends Component {
             <div className="row mt-15">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <TaskList
-                  tasks={tasks}
                   onUpdateStatus={this.onUpdateStatus}
                   onDelete={this.onDelete}
                   onEdit={this.onEdit}
@@ -182,4 +186,17 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    tasks: state.tasks
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    actionGetData: () => {
+      dispatch(getData());
+    }
+  };
+}
+ 
+export default connect(mapStateToProps,mapDispatchToProps)(App);

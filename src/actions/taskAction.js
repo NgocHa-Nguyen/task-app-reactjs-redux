@@ -1,5 +1,5 @@
 import * as types from '../types/taskType'
-import request from '../untils/apiRequest'
+import {request} from '../untils/apiRequest'
 export const getData = () => {
     return async dispatch => {
       try {

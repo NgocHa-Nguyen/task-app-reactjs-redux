@@ -1,6 +1,6 @@
 import { GET_DATA } from "../types/taskType";
 const initialState = {
-  tasks: [{}]
+  tasks: []
 };
 export default function tasks(state = initialState, action) {
   switch (action.type) {
@@ -12,4 +12,4 @@ export default function tasks(state = initialState, action) {
     default:
       return state;
   }
-}
+} 

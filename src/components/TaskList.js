@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import TaskItem from "./TaskItem";
-
+import { connect } from "react-redux";
+import { getData } from "../actions/taskAction";
 class TaskList extends Component {
   constructor(props) {
     super(props);
@@ -9,33 +10,40 @@ class TaskList extends Component {
       filterStatus: -1
     };
   }
-  onChange = event => {  
+  componentDidMount() {
+    this.props.actionGetData();
+  }
+  onChange = event => {
     let target = event.target;
     let name = target.name;
     let value = target.value;
     this.props.onFilter(
-      name === 'filterName' ? value : this.state.filterName,
-      name === 'filterStatus' ? value : this.state.filterStatus
+      name === "filterName" ? value : this.state.filterName,
+      name === "filterStatus" ? value : this.state.filterStatus
     );
     this.setState({
       [name]: value
     });
   };
+  element = () => {
+    {
+      let { data } = this.props.tasks.tasks;
+      if (data !== undefined && data.length > 0) {
+        return data.map((task, index) => (
+          <TaskItem
+            onUpdateStatus={this.props.onUpdateStatus}
+            onDelete={this.props.onDelete}
+            onEdit={this.props.onEdit}
+            key={task.id}
+            task={task}
+            index={index}
+          ></TaskItem>
+        ));
+      }
+    }
+  };
   render() {
-    let { tasks } = this.props;
     let { filterName, filterStatus } = this.state;
-    const element = tasks.map((task, index) => {
-      return (
-        <TaskItem
-          onUpdateStatus={this.props.onUpdateStatus}
-          onDelete={this.props.onDelete}
-          onEdit={this.props.onEdit}
-          key={task.id}
-          index={index}
-          task={task}
-        ></TaskItem>
-      );
-    });
     return (
       <div>
         <table className="table table-bordered table-hover mt-15">
@@ -73,12 +81,24 @@ class TaskList extends Component {
               </td>
               <td></td>
             </tr>
-            {element}
+            {this.element()}
           </tbody>
         </table>
       </div>
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    tasks: state.tasks
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    actionGetData: () => {
+      dispatch(getData());
+    }
+  };
+};
 
-export default TaskList;
+export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
