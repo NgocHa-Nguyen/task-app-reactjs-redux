@@ -6,4 +6,4 @@ export const request = (url, method) => {
       url: `http://${url}`
       //data: payload
     });
-  };
+  }; 

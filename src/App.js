@@ -13,6 +13,12 @@ class App extends Component {
       filter: {
         name: "",
         status: -1
+      },
+      //search
+      keySearch : '',
+      sort : {
+        by : 'name',
+        value : 1
       }
     };
   }
@@ -67,7 +73,7 @@ class App extends Component {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   };
   onEdit = id => {
-    let { tasks} = this.state;
+    let { tasks } = this.state;
     tasks.map(task => {
       if (task.id === id) {
         this.setState({
@@ -80,19 +86,44 @@ class App extends Component {
   onFilter = (filterName, filterStatus) => {
     filterStatus = parseInt(filterStatus, 10);
     this.setState({
-      name: filterName,
-      status: filterStatus
+      filter: {
+        ...this.state.filter,
+        name: filterName.toLowerCase(),
+        status:  filterStatus
+      }
     });
-    console.log(this.state)
   };
+  onSearch = (keySearch) => {
+    this.setState({
+      keySearch : keySearch
+    })
+    console.log(this.state.keySearch)
+  }
   render() {
-    let { tasks, isDisplayForm, taskEditing, filter } = this.state;
-    console.log(filter);
-    if (filter.name) {
-      tasks = tasks.filter(task => {
-        return task.name.toLowerCase().indexOf(filter.name) !== -1;
-      });
+    let { tasks, isDisplayForm, taskEditing, filter, keySearch } = this.state;
+    if (filter) {
+      if (filter.name) {
+        tasks = tasks.filter(task => {
+          return task.title.toLowerCase().indexOf(filter.name) !== -1;
+        });
+      }
+      if(filter.status) {
+        tasks = tasks.filter((task) => {
+          if(filter.status === -1){
+            return task;
+          }else 
+          {
+            return task.status === (filter.status === 1 ? true : false)
+          }
+        })
+      }
     }
+    if(keySearch){
+      tasks = tasks.filter((task) => {
+        return task.title.toLowerCase().indexOf(keySearch) !== -1
+      })
+    }
+  
     const elemteTaskForm = isDisplayForm ? (
       <TaskForm
         onSubmit={this.onSubmit}
@@ -132,7 +163,7 @@ class App extends Component {
             >
               <span className="fa fa-plus mr-5"></span>Thêm Công Việc
             </button>
-            <Control></Control>
+            <Control onSearch = {this.onSearch}></Control>
             <div className="row mt-15">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <TaskList

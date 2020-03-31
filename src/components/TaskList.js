@@ -9,7 +9,7 @@ class TaskList extends Component {
       filterStatus: -1
     };
   }
-  onChange = event => {
+  onChange = event => {  
     let target = event.target;
     let name = target.name;
     let value = target.value;
@@ -67,7 +67,7 @@ class TaskList extends Component {
                   onChange={this.onChange}
                 >
                   <option value="-1">Tất Cả</option>
-                  <option value="0">Ẩn</option>
+                  <option value="2">Ẩn</option>
                   <option value="1">Kích Hoạt</option>
                 </select>
               </td>
